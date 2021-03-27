@@ -14,9 +14,7 @@ def index(request):
     return render(
         request,
         './posts/index.html',
-        {'page': page,
-         # 'paginator': paginator,
-         }
+        {'page': page, }
     )
 
 
@@ -31,7 +29,6 @@ def group_posts(request, slug):
         'group.html',
         {'group': group,
          'page': page,
-         # 'paginator': paginator,
          }
     )
 
