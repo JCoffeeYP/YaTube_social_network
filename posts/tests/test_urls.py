@@ -148,3 +148,57 @@ class PostURLTests(TestCase):
         response = self.authorized_client.get(reverse('posts:index'))
         last_content = response.content
         self.assertNotEquals(current_content, last_content)
+
+    def test_user_can_follow_and_unfollow_other_author(self):
+        """пользователь может подписываться на других пользователей
+        и удалять их из подписок.
+        """
+        self.other_author = User.objects.create_user(username='SidorovAA')
+        self.authorized_client.get(
+            reverse(
+                'posts:profile_follow',
+                kwargs={'username': self.other_author, }
+            )
+        )
+        count_follower = self.user.follower.count()
+        self.assertEqual(count_follower, 1)
+        self.authorized_client.get(
+            reverse(
+                'posts:profile_unfollow',
+                kwargs={'username': self.other_author, }
+            )
+        )
+        count_follower = self.user.follower.count()
+        self.assertEqual(count_follower, 0)
+
+    def test_post_appears_or_doesnt_appear_on_followpage_other_author(self):
+        """Пост появляется только на странице подписчика"""
+        self.other_author_1 = User.objects.create_user(username='SidorovAA')
+        self.other_author_2 = User.objects.create_user(username='KozlovBB')
+        Post.objects.create(
+            text='Тестовый пост 1',
+            author=self.other_author_1,
+            )
+        self.authorized_client.get(
+            reverse(
+                'posts:profile_follow',
+                kwargs={'username': self.other_author_1, }
+            )
+        )
+        response = self.authorized_client.get(reverse('posts:follow_index'))
+        self.assertEqual(len(response.context.get('page').object_list), 1)
+        self.authorized_client.force_login(self.other_author_2)
+        response = self.authorized_client.get(reverse('posts:follow_index'))
+        self.assertEqual(len(response.context.get('page').object_list), 0)
+
+    def test_only_author_can_comments_post(self):
+        """Только зарегистрированный пользователь можешь оставлять комментаирии
+        """
+        response = self.guest_client.get(
+            reverse(
+                'posts:add_comment',
+                kwargs={'username': PostURLTests.post.author.username,
+                        'post_id': PostURLTests.post.id}
+            )
+        )
+        self.assertEqual(response.status_code, 302)
