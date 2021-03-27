@@ -140,7 +140,7 @@ class PostURLTests(TestCase):
         Post.objects.create(
             text='Тестовый пост 1',
             author=self.user,
-            )
+        )
         response = self.authorized_client.get(reverse('posts:index'))
         current_content = response.content
         self.assertEqual(previous_content, current_content)
@@ -178,7 +178,7 @@ class PostURLTests(TestCase):
         Post.objects.create(
             text='Тестовый пост 1',
             author=self.other_author_1,
-            )
+        )
         self.authorized_client.get(
             reverse(
                 'posts:profile_follow',

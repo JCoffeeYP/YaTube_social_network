@@ -41,7 +41,7 @@ class Post(models.Model):
         null=True,
         verbose_name='Изображение',
         help_text='Если есть что показать, выкладывай!'
-        )
+    )
 
     def __str__(self) -> str:
         return shorten(self.text, width=15)

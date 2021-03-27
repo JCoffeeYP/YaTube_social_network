@@ -5,8 +5,8 @@ from django.contrib import admin
 from django.urls import include, path
 from django.views.generic import RedirectView
 
-handler404 = 'posts.views.page_not_found' # noqa
-handler500 = 'posts.views.server_error' # noqa
+handler404 = 'posts.views.page_not_found'  # noqa
+handler500 = 'posts.views.server_error'  # noqa
 
 urlpatterns = [
     path('yatube_admin/', admin.site.urls),
