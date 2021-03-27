@@ -3,7 +3,7 @@ from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import CommentForm, PostForm
-from .models import Group, Post, User
+from .models import Follow, Group, Post, User
 
 
 def index(request):
@@ -43,12 +43,16 @@ def profile(request, username):
     paginator = Paginator(user_posts, 10)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
+    following = len(post_author.following.all())
+    follower = len(post_author.follower.all())
     return render(
         request,
         './posts/profile.html',
         {'page': page,
          'author': post_author,
          'post_count': post_count,
+         'following': following,
+         'follower': follower
          }
     )
 
@@ -112,6 +116,37 @@ def new_post(request):
         form.save()
         return redirect('posts:index')
     return render(request, './posts/new_post.html', {'form': form, })
+
+
+@login_required
+def follow_index(request):
+    selected_posts = Post.objects.filter(author__following__user=request.user)
+    paginator = Paginator(selected_posts, 10)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+    return render(
+        request,
+        './posts/follow.html',
+        {'page': page,
+         'paginator': paginator,
+         }
+    )
+
+
+@login_required
+def profile_follow(request, username):
+    author = get_object_or_404(User, username=username)
+    if author != request.user:
+        Follow.objects.get_or_create(user=request.user, author=author)
+    return redirect('posts:profile', username)
+
+
+@login_required
+def profile_unfollow(request, username):
+    author = get_object_or_404(User, username=username)
+    if author != request.user:
+        Follow.objects.filter(user=request.user, author=author).delete()
+    return redirect('posts:profile', username)
 
 
 def page_not_found(request, exception):

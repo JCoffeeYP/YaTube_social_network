@@ -51,6 +51,7 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
+    created = models.DateTimeField('date published', auto_now_add=True)
     post = models.ForeignKey(
         Post,
         on_delete=models.CASCADE,
@@ -65,4 +66,16 @@ class Comment(models.Model):
         verbose_name='Текст комментария',
         help_text='Добавьте комментарий'
     )
-    created = models.DateTimeField('date published', auto_now_add=True),
+
+
+class Follow(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='follower'
+    )
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='following'
+    )
