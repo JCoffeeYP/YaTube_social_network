@@ -19,14 +19,21 @@ class GroupAdmin(admin.ModelAdmin):
     empty_value_display = '-пусто-'
 
 
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ('post', 'author', 'text')
+    search_fields = ('post', 'author')
+    list_filter = ('author',)
+    empty_value_display = '-пусто-'
+
+
 class FollowAdmin(admin.ModelAdmin):
-    list_display = ("user", "author")
-    search_fields = ("user",)
-    list_filter = ("user",)
-    empty_value_display = "-пусто-"
+    list_display = ('user', 'author')
+    search_fields = ('user',)
+    list_filter = ('user',)
+    empty_value_display = '-пусто-'
 
 
 admin.site.register(Post, PostAdmin)
 admin.site.register(Group, GroupAdmin)
-admin.site.register(Comment)
-admin.site.register(Follow)
+admin.site.register(Comment, CommentAdmin)
+admin.site.register(Follow, FollowAdmin)

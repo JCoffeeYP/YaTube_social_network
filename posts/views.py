@@ -40,8 +40,8 @@ def profile(request, username):
     paginator = Paginator(user_posts, 10)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
-    following = len(post_author.following.all())
-    follower = len(post_author.follower.all())
+    following = post_author.following.count()
+    follower = post_author.follower.count()
     return render(
         request,
         './posts/profile.html',

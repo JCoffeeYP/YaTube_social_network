@@ -30,6 +30,18 @@ class PostModelTest(TestCase):
         help_text = post._meta.get_field('text').help_text
         self.assertEquals(help_text, 'Чем бы вы хотели поделиться с миром?')
 
+    def test_image_label(self):
+        """verbose_name поля image совпадает с ожидаемым."""
+        post = PostModelTest.post
+        verbose = post._meta.get_field('image').verbose_name
+        self.assertEquals(verbose, 'Изображение')
+
+    def test_image_help_text(self):
+        """help_text поля image совпадает с ожидаемым."""
+        post = PostModelTest.post
+        help_text = post._meta.get_field('image').help_text
+        self.assertEquals(help_text, 'Если есть что показать, выкладывай!')
+
     def test_object_name_is_post_field(self):
         """__str__  post - это строчка с содержимым post.text."""
         post = PostModelTest.post

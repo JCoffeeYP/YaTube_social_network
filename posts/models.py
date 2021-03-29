@@ -3,6 +3,7 @@ from textwrap import shorten
 from django.contrib.auth import get_user_model
 from django.db import models
 
+
 User = get_user_model()
 
 
@@ -79,3 +80,12 @@ class Follow(models.Model):
         on_delete=models.CASCADE,
         related_name='following'
     )
+
+    # Если я верно понял, то тут мы создаем уникальный набор соотношений
+    # подписчик-автор. Но если честно непонятно совершенно для это это нужно:-)
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'author'],
+                name='unique_follow')
+        ]
