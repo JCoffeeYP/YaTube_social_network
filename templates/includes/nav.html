@@ -4,6 +4,7 @@
 
         {% if user.is_authenticated %}
             Пользователь: <a class="p-2 text-dark" href="{% url 'posts:profile' user.username %}">{{ user.username }}</a>
+            <a class="p-2 text-dark" href="{% url 'posts:group_list' %}">Группы</a>
             <a class="p-2 text-dark" href="{% url 'posts:new_post' %}">Опубликовать запись</a>
             <a class="p-2 text-dark" href="{% url 'password_change' %}">Изменить пароль</a>
             <a class="p-2 text-dark" href="{% url 'logout' %}">Выйти</a>

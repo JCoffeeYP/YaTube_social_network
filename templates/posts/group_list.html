@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %} Список групп {% endblock %}
+{% block header %}{% endblock %}
+{% block content %}
+
+
+
+        <h1> Доступные группы </h1>
+
+        {% for group in page %}
+
+            <div class="card mb-3 mt-1 shadow-sm">
+                <div class="card-body">
+                    <p class="card-text">
+                        <h3>
+                            <a href="{% url 'posts:group_posts' group.slug %}"><strong class="d-block text-gray-dark">{{ group.title }}</strong></a>
+                        </h3>
+                        {{ group.description|linebreaksbr }}
+                    </p>
+                </div>
+            </div>
+
+        {% endfor %}
+
+
+    {% if page.has_other_pages %}
+        {% include "includes/paginator.html" %}
+    {% endif %}
+
+{% endblock %}

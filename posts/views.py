@@ -33,6 +33,18 @@ def group_posts(request, slug):
     )
 
 
+def group_list(request):
+    groups = Group.objects.all()
+    paginator = Paginator(groups, 10)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+    return render(
+        request,
+        './posts/group_list.html',
+        {'page': page, }
+    )
+
+
 def profile(request, username):
     post_author = get_object_or_404(User, username=username)
     user_posts = post_author.posts.all()
@@ -40,6 +52,8 @@ def profile(request, username):
     paginator = Paginator(user_posts, 10)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
+    follow_check = request.user.is_authenticated and Follow.objects.filter(
+        user=request.user, author=post_author).exists()
     following = post_author.following.count()
     follower = post_author.follower.count()
     return render(
@@ -49,7 +63,8 @@ def profile(request, username):
          'author': post_author,
          'post_count': post_count,
          'following': following,
-         'follower': follower
+         'follower': follower,
+         'follow_check': follow_check
          }
     )
 

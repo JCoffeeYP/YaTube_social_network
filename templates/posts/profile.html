@@ -13,12 +13,14 @@
                 {% include "posts/post_item.html" %}
             {% endfor %}
 
-            {% include "includes/paginator.html" %}
+            {% if page.has_other_pages %}
+                {% include "includes/paginator.html" %}
+            {% endif %}
 
         </div>
 
         <li class="list-group-item">
-            {% if following %}
+            {% if follow_check %}
             <a class="btn btn-lg btn-light" 
                 href="{% url 'posts:profile_unfollow' author.username %}" role="button"> 
                 Отписаться 
