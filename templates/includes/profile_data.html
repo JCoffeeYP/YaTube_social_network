@@ -5,22 +5,33 @@
                 {{ author.get_full_name }}
             </div>
             <div class="h3 text-muted">
-                @{{ author.username }}
+                <span style="color:red">@</span>{{ author.username }}
             </div>
         </div>
         <ul class="list-group list-group-flush">
             <li class="list-group-item">
                 <div class="h6 text-muted">
-                    Подписчиков: {{ following }} <br />
-                    Подписан: {{ follower }}
+                    Подписчиков: <span style="color:red">{{ following }}</span> <br/>
+                    Подписан: <span style="color:red">{{ follower }}</span>
                 </div>
             </li>
             <li class="list-group-item">
                 <div class="h6 text-muted">
-                    Записей: {{ post_count }}
+                    Записей: <span style="color:red">{{ post_count }}</span>
                 </div>
             </li>
-        </ul>
+        
+            <li class="list-group-item">
+                {% if follow_check %}
+                    <a class="btn btn-dark" href="{% url 'posts:profile_unfollow' author.username %}" role="button"> 
+                        Отписаться 
+                    </a> 
+                {% else %}
+                    <a class="btn btn-dark" href="{% url 'posts:profile_follow' author.username %}" role="button">
+                        Подписаться 
+                    </a>
+                {% endif %}
+            </li>
     </div>
 </div>
 

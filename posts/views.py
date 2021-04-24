@@ -85,6 +85,8 @@ def post_view(request, username, post_id):
     user_post = get_object_or_404(Post, author__username=username, id=post_id)
     post_count = user_post.author.posts.count()
     form = CommentForm(instance=None)
+    following = user_post.author.following.count()
+    follower = user_post.author.follower.count()
     return render(
         request,
         './posts/post.html',
@@ -93,6 +95,8 @@ def post_view(request, username, post_id):
          'post_count': post_count,
          'comments': user_post.comments.all(),
          'form': form,
+         'following': following,
+         'follower': follower,
          }
     )
 
@@ -128,6 +132,15 @@ def new_post(request):
         form.save()
         return redirect('posts:index')
     return render(request, './posts/new_post.html', {'form': form, })
+
+
+@login_required
+def delete_post(request, username, post_id):
+    post = get_object_or_404(Post, author__username=username, id=post_id)
+    if post.author != request.user:
+        return redirect('posts:profile', username)
+    post.delete()
+    return redirect('posts:profile', username)
 
 
 @login_required
