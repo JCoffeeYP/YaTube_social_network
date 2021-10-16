@@ -20,6 +20,8 @@ Django        | 2.2.6
 - Установить виртуальное окружение `python3.8 -m venv venv`
 - Активировать виртуальное окружение `source venv/bin/activate`
 - Установить зависимости `pip install --upgrade pip && pip install -r requirements.txt`
+- Выполнить миграции `python manage.py createsuperuser`
+- Собрать статику `python manage.py collectstatic`
 - создать superuser командой `python manage.py createsuperuser`
 - запустить проект командой `python manage.py runserver`
 
