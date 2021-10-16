@@ -14,7 +14,8 @@
                                 Об авторе
                             </div> 
                         </li>
-                        <img src="/hw04_tests/static/images/author.jpg" alt="Фотография автора" style="width:256px;height:256px;">
+                        {% load static %}
+                        <img src="{% static 'about/author.jpg' %}" alt="Фотография автора">
                         <li class="list-group-item">
                             <div class="h6 text-muted">
                                 Фотография автора проекта на старте карьеры

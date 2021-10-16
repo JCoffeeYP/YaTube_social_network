@@ -5,7 +5,7 @@
     {% endthumbnail %}
     <div class="card-body">
         <p class="card-text">
-            <a href="{% url 'posts:profile' author.username %}"><strong class="d-block text-gray-dark">@{{ author.username }}</strong></a>
+            <a href="{% url 'posts:profile' author.username %}"><span style="color:red">@</span><span style="color:black">{{ author.username }}</span></a></br>
             {{ post.text|linebreaksbr }}
         </p>
         <div class="d-flex justify-content-between align-items-center">
@@ -17,6 +17,7 @@
                 {% endif %}
                 {% if request.user == post.author %}
                     <a class="btn btn-sm text-muted" href="{% url 'posts:post_edit' author.username post.id %}" role="button">Редактировать</a>
+                    <a class="btn btn-sm text-muted" href="{% url 'posts:delete_post' author.username post.id %}" role="button">Удалить запись</a>
                 {% endif %}
             </div>
             <small class="text-muted">{{ post.pub_date|date:"d M Y" }}</small>

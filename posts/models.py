@@ -3,7 +3,6 @@ from textwrap import shorten
 from django.contrib.auth import get_user_model
 from django.db import models
 
-
 User = get_user_model()
 
 
@@ -14,6 +13,9 @@ class Group(models.Model):
 
     def __str__(self) -> str:
         return self.title
+
+    class Meta:
+        ordering = ('title',)
 
 
 class Post(models.Model):
@@ -81,8 +83,6 @@ class Follow(models.Model):
         related_name='following'
     )
 
-    # Если я верно понял, то тут мы создаем уникальный набор соотношений
-    # подписчик-автор. Но если честно непонятно совершенно для это это нужно:-)
     class Meta:
         constraints = [
             models.UniqueConstraint(

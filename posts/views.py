@@ -33,6 +33,18 @@ def group_posts(request, slug):
     )
 
 
+def group_list(request):
+    groups = Group.objects.all()
+    paginator = Paginator(groups, 10)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+    return render(
+        request,
+        './posts/group_list.html',
+        {'page': page, }
+    )
+
+
 def profile(request, username):
     post_author = get_object_or_404(User, username=username)
     user_posts = post_author.posts.all()
@@ -40,6 +52,8 @@ def profile(request, username):
     paginator = Paginator(user_posts, 10)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
+    follow_check = request.user.is_authenticated and Follow.objects.filter(
+        user=request.user, author=post_author).exists()
     following = post_author.following.count()
     follower = post_author.follower.count()
     return render(
@@ -49,7 +63,8 @@ def profile(request, username):
          'author': post_author,
          'post_count': post_count,
          'following': following,
-         'follower': follower
+         'follower': follower,
+         'follow_check': follow_check
          }
     )
 
@@ -70,6 +85,8 @@ def post_view(request, username, post_id):
     user_post = get_object_or_404(Post, author__username=username, id=post_id)
     post_count = user_post.author.posts.count()
     form = CommentForm(instance=None)
+    following = user_post.author.following.count()
+    follower = user_post.author.follower.count()
     return render(
         request,
         './posts/post.html',
@@ -78,6 +95,8 @@ def post_view(request, username, post_id):
          'post_count': post_count,
          'comments': user_post.comments.all(),
          'form': form,
+         'following': following,
+         'follower': follower,
          }
     )
 
@@ -113,6 +132,15 @@ def new_post(request):
         form.save()
         return redirect('posts:index')
     return render(request, './posts/new_post.html', {'form': form, })
+
+
+@login_required
+def delete_post(request, username, post_id):
+    post = get_object_or_404(Post, author__username=username, id=post_id)
+    if post.author != request.user:
+        return redirect('posts:profile', username)
+    post.delete()
+    return redirect('posts:profile', username)
 
 
 @login_required
